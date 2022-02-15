@@ -35,3 +35,32 @@ jobs:
       env:
         TD_API_KEY: 1/XXX
         TD_API_SERVER: https://api.treasure-data.com/
+        
+  test-aarch64:
+    name: build_arm64
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - name: Build and Test for arm64
+      run: |
+           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+           arm64v8/ubuntu:latest \
+           bash -exc 'apt-get update && apt-get -y install git && \
+           ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && export DEBIAN_FRONTEND=noninteractive && apt-get install -y tzdata && dpkg-reconfigure --frontend noninteractive tzdata && \
+           apt install -y software-properties-common && \
+           add-apt-repository ppa:deadsnakes/ppa && \
+           apt install -y python3.8 && \
+           apt install -y python3.8-venv && \
+           python3.8 -m venv venv38 && \
+           source venv38/bin/activate && \
+           python -m pip install --upgrade pip && \
+           pip install .[spark] && \
+           #apt-get install -y python3-dev default-libmysqlclient-dev build-essential && \
+           pip check && \
+           pip install nox && \
+           nox'         
