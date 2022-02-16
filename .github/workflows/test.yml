@@ -61,6 +61,6 @@ jobs:
            python -m pip install --upgrade pip && \
            pip install .[spark] && \
            pip check && \
-           pip install nox && \
+           pip install nox pytest && \
            export TD_API_KEY=1/XXX && \
-           nox'         
+           pytest'         
