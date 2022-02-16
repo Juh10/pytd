@@ -63,4 +63,5 @@ jobs:
            #apt-get install -y python3-dev default-libmysqlclient-dev build-essential && \
            pip check && \
            pip install nox && \
+           export TD_API_KEY=1/XXX && \
            nox'         
